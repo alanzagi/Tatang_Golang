@@ -1,0 +1,8 @@
+CREATE TABLE debts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT NOT NULL,
+    jumlah INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    jatuh_tempo TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
