@@ -9,13 +9,13 @@ import (
 func SetupRouter(debtHandler *handler.DebtHandler) *gin.Engine {
 	r := gin.Default()
 
-	// WAJIB: load view
 	r.LoadHTMLGlob("web/templates/*.html")
-
-	// static file (css, js)
 	r.Static("/static", "./web/static")
 
-	// route
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(302, "/debts")
+	})
+
 	r.GET("/debts", debtHandler.Index)
 
 	return r
