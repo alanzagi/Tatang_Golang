@@ -5,20 +5,19 @@ import (
 	"newapp/internal/entity"
 )
 
+type debtSQLiteRepository struct {
+	db *sql.DB
+}
 
-func NewDebtRepository(db *sql.DB) *DebtRepository {
-	return &DebtRepository{
-		DB: db,
+// constructor
+func NewDebtSQLiteRepository(db *sql.DB) DebtRepository {
+	return &debtSQLiteRepository{
+		db: db,
 	}
 }
 
-type DebtRepository interface {
-	FindAll() ([]entity.Debt, error)
-}
-
-
-func (r *DebtRepository) FindAll() ([]entity.Debt, error) {
-	rows, err := r.DB.Query(`
+func (r *debtSQLiteRepository) FindAll() ([]entity.Debt, error) {
+	rows, err := r.db.Query(`
 		SELECT id, name, amount, status, note, created_at, updated_at
 		FROM debts
 	`)
@@ -28,9 +27,10 @@ func (r *DebtRepository) FindAll() ([]entity.Debt, error) {
 	defer rows.Close()
 
 	var debts []entity.Debt
+
 	for rows.Next() {
 		var d entity.Debt
-		err := rows.Scan(
+		if err := rows.Scan(
 			&d.ID,
 			&d.Name,
 			&d.Amount,
@@ -38,8 +38,7 @@ func (r *DebtRepository) FindAll() ([]entity.Debt, error) {
 			&d.Note,
 			&d.CreatedAt,
 			&d.UpdatedAt,
-		)
-		if err != nil {
+		); err != nil {
 			return nil, err
 		}
 		debts = append(debts, d)

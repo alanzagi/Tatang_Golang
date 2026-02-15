@@ -18,9 +18,11 @@ func main() {
 	}
 	defer db.Close()
 
-	debtRepo := repository.NewDebtSQLiteRepository(db)
-	debtUsecase := usecase.NewDebtUsecase(debtRepo)
-	debtHandler := handler.NewDebtHandler(debtUsecase)
+	repo := repository.NewDebtSQLiteRepository(db)
+usecase := usecase.NewDebtUsecase(repo)
+handler := handler.NewDebtHandler(usecase)
+
+	
 
 	r := router.SetupRouter(debtHandler)
 	r.Run(":8080")
